@@ -1,0 +1,216 @@
+import random
+from tkinter import *
+from tkinter.font import BOLD, ITALIC
+from tkinter.messagebox import *  
+
+x = 100
+y = 500 
+
+colors = ["yellow","blue","#32CD32","#F4A460","#66CDAA","#FF4500","#800080","#808000","#BA55D3","#2F4F4F","#808080","#00008B","#FFE4B5"]
+def bom(event):
+    print(str(event.x)+":"+str(event.y))
+#Verifier si pion 1 est arrivé à la dernier case    
+def check(cords,o):
+    if cords[0]==1000 and cords[1]==220:
+        if o==64:
+         showinfo("Result","Congrats player 1 you won!!")    
+         tk.destroy()
+        elif o > 64 :
+         showwarning("Warning","player 1 you crossed the line you lose !!")  
+         showinfo("Result","Congrats player 2 you won!!")  
+         tk.destroy()
+#Verifier si pion 2 est arrivé à la dernier case
+def check2(cords,o):
+    if cords[0]==1000 and cords[1]==220:
+        if o==64:
+         showinfo("Result","Congrats player 2 you won!!")    
+         tk.destroy()
+        elif o > 64 :
+         showwarning("Warning","player 2 you crossed the line you lose !!")  
+         showinfo("Result","Congrats player 1 you won!!")  
+         tk.destroy()
+#Verifier si il y a du collision
+def collision1(p1,p2):
+    coor = canvas.coords(p1)
+    if not (coor[0]<340 and coor[1]==520):  #les 3 premiers cases ne sont pas impliquées
+     if canvas.coords(p1) == canvas.coords(p2):
+       for i in range(0,3):  
+         if coor[0] < 1400 and coor[1] == 520:
+          canvas.move(p1,-80,0)
+         elif coor[0] >= 1400 and coor[1] > 105  :
+            canvas.move(p1,0,70)
+         elif coor[1] < 105 and coor[0] > 120 :
+           canvas.move(p1,80,0)    
+         elif coor[0] <=  120 and coor[1] < 380:
+           canvas.move(p1,0,-70)
+         elif coor [0] < 1240 and coor[1] == 380:
+           canvas.move(p1,-70,0)
+         elif coor[0] >= 1170 and coor[1] > 220:
+           canvas.move(p1,0,80)  
+         elif coor[0] >= 1010 and coor[1] == 220:
+           canvas.move(p1,80,0)     
+         tk.update()
+o = 0  
+#avancement pion 1            
+def avance():
+    val = random.randint(1,12)
+    text.delete(0,"end")
+    text.insert(0,val)
+    global o
+    o = o + val
+    for i in range(0,val):
+       coor = canvas.coords(pion)
+       
+       if coor[0] < 1400 and coor[1] == 520:
+          canvas.move(pion,80,0)
+       elif coor[0] >= 1400 and coor[1] > 105  :
+            canvas.move(pion,0,-70)
+       elif coor[1] < 105 and coor[0] > 120 :
+           canvas.move(pion,-80,0)    
+       elif coor[0] <=  120 and coor[1] < 380:
+           canvas.move(pion,0,70)
+       elif coor [0] < 1240 and coor[1] == 380:
+           canvas.move(pion,70,0)
+       elif coor[0] >= 1170 and coor[1] > 220:
+           canvas.move(pion,0,-80)  
+       elif coor[0] >= 1010 and coor[1] == 220:
+           canvas.move(pion,-80,0)     
+       tk.update()
+    print(coor) 
+    print(o)
+    check(coor,o)  
+
+    collision1(pion2,pion)
+    btn.config(state=DISABLED)
+    if (btn2["state"] == DISABLED):
+        btn2.config(state=NORMAL)
+       
+
+    
+    
+o2 = 0
+#avancement pion 2
+def avancee():
+    vall = random.randint(1,12)
+    text2.delete(0,"end")
+    text2.insert(0,vall)
+    global o2
+    o2 = o2 + vall
+   
+    
+    for i in range(0,vall):
+       coor = canvas.coords(pion2)
+        
+       if coor[0] < 1400 and coor[1] == 520:
+          canvas.move(pion2,80,0)
+       elif coor[0] >= 1400 and coor[1] > 105  :
+            canvas.move(pion2,0,-70)
+       elif coor[1] < 105 and coor[0] > 120 :
+           canvas.move(pion2,-80,0)    
+       elif coor[0] <=  120 and coor[1] < 380:
+           canvas.move(pion2,0,70)
+       elif coor [0] < 1240 and coor[1] == 380:
+           canvas.move(pion2,70,0)
+       elif coor[0] >= 1170 and coor[1] > 220:
+           canvas.move(pion2,0,-80)  
+       elif coor[0] >= 1010 and coor[1] == 220:
+           canvas.move(pion2,-80,0)     
+       tk.update()
+    print(coor) 
+    print(o2) 
+    check2(coor,o2)  
+    collision1(pion,pion2)
+    btn2.config(state=DISABLED)
+    if (btn["state"] == DISABLED):
+        btn.config(state=NORMAL)
+
+
+tk = Tk()
+tk.title("jeu de lois")
+tk.geometry("1080x1920")
+canvas = Canvas(tk,height=1080,width=1920,bg="pink")
+#Dessiner le PLAN
+for i in range(0,16):
+    canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+    canvas.create_text(x+10,520,text=str(i))
+    x = x + 80
+
+canvas.create_arc(x-80,y-80,x+80,y+80,fill=random.choice(colors),outline="black",start=270)
+canvas.create_text(x+10,520,text=str(i+1))
+
+y = y - 80
+for i in range(0,5):
+    canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+    m = i + 17
+    canvas.create_text(1390,y+70,text=str(m))
+    y = y - 70
+y = y + 70
+canvas.create_arc(x-80,y-80,x+80,y+80,fill=random.choice(colors),outline="black",start=360)
+canvas.create_text(1390,y-10,text="22")
+l = y
+y = y - 80
+x =x-80
+for i in range(0,15):
+    canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+    canvas.create_text(x+10,l-10,text=str(i+23))
+    x = x - 80
+x = x + 80
+y = y + 80
+canvas.create_arc(x-80,y-80,x+80,y+80,fill=random.choice(colors),outline="black",start=90)
+canvas.create_text(x-70,l-10,text="38")
+g=x-70
+y = y + 210
+x = x - 80
+
+for i in range(0,4):
+    canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+    canvas.create_text(x+10,y+20,text=str(42-i))
+    y = y - 70
+    
+x = x + 80 
+y = y + 80*4-30
+for i in range(0,15):
+    canvas.create_rectangle(x,y,x+70,y+70,fill=random.choice(colors),outline="black")
+    canvas.create_text(x+10,y+10,text=str(i+43))
+
+    x = x + 70
+
+   
+canvas.create_arc(x-80,y-70,x+70,y+70,fill=random.choice(colors),outline="black",start=270)
+canvas.create_text(x+10,y+10,text="58")
+l = y
+y = y - 80
+x = x - 5
+
+canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+canvas.create_text(x+10,y+10,text="59")
+
+
+canvas.create_arc(x-85,y-75,x+85,y+75,fill=random.choice(colors),outline="black",start=360)
+canvas.create_text(x+10,y-65,text="60")
+x = x - 80 
+y = y - 80 
+for i in range(0,3):
+    canvas.create_rectangle(x,y,x+80,y+80,fill=random.choice(colors),outline="black")
+    canvas.create_text(x+10,y+10,text=str(i+61))
+    x = x - 80
+#Les pions
+pion = canvas.create_oval(120,520,170,560,fill="black")
+pion2 = canvas.create_oval(120,520,170,560,fill="brown")
+#Les tableaux de bords
+text = Entry(tk,width=9,font=("Arial",20,BOLD),fg="white",bg="black",justify=CENTER)
+text.place(x=450,y=650)
+text2 = Entry(tk,width=9,font=("Arial",20,BOLD),fg="white",bg="brown",justify=CENTER)
+text2.place(x=850,y=650)
+# Les Bouttons
+btn = Button(tk,text="lancer 1",font=("Arial",20,BOLD),fg="white",bg="black",command=avance)
+btn.place(x=450,y=700)
+btn2 = Button(tk,text="lancer 2",font=("Arial",20,BOLD),fg="white",bg="brown",command=avancee)
+btn2.place(x=850,y=700)
+lab = Label(tk,text="Le Jeu de l'oie",font=("Arial",50,BOLD,ITALIC),bg="pink",fg="white")
+lab.place(x=380,y=200)
+
+canvas.pack()
+# pour voir les coordonnées
+tk.bind("<Button-3>",bom)
+tk.mainloop()
